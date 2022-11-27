@@ -1,0 +1,58 @@
+version: "3.8"
+
+networks:
+  blubooks_dev:
+
+volumes:
+  data_db_blubooks_dev: {}
+  data_apps_blubooks_dev: {}
+
+services:
+  app:
+    container_name: blubooks_app_dev
+    build:
+      context: .
+      args:
+        LOCAL_USER_ID: 1000   
+      dockerfile: ./docker/app/Dockerfile 
+    ports:
+      - "4070:8080"
+      - "4080:3000"      
+    volumes:
+      - ".:/app_blubooks"
+      -  .go_pkg:/go/pkg
+      - "data_db_blubooks_dev:/data/blubooks"
+    depends_on:
+      - db
+    networks:
+      - blubooks_dev
+    stdin_open: true      
+    tty: true
+    #command: bash -c "go mod tidy && go mod vendor"     
+    #command: bash -c "go mod vendor"     
+    command: bash -c "gin --buildArgs -buildvcs=false  -i --appPort 8080 run main.go "     
+  db:
+    container_name: blubooks_db
+    image: mariadb:10.6
+    volumes:
+      - data_db_blubooks_dev:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD:  ${DB_ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER:  ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+    ports:
+      - 3306:3306
+    restart: always
+    networks:
+      - blubooks_dev
+  adminer_dev:
+    container_name: blubooks_adminer
+    image: adminer:4.8.1
+    restart: always
+    ports:
+      - 4071:8080
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    networks:
+      - blubooks_dev

@@ -30,6 +30,13 @@ func New(a *app.App) *chi.Mux {
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Group(func(r chi.Router) {
 			r.Use(middleware.ContentTypeJson)
+			r.Post("/auth/login", a.Login)
+			r.Post("/auth/refresh", a.RefreshLoginToken)
+		})
+
+		r.Group(func(r chi.Router) {
+			r.Use(middleware.JWTAuth(a))
+			r.Use(middleware.ContentTypeJson)
 			r.Get("/clients/{id}/collections", a.GetCollections)
 
 			r.Get("/clients", a.HandleListClients)

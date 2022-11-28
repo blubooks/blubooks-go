@@ -11,6 +11,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/segmentio/ksuid"
+
 	"github.com/jessevdk/go-flags"
 
 	dbConn "blubooks/adapter/gorm"
@@ -33,6 +35,7 @@ type ArgOptions struct {
 	Env     string `short:"e" long:"env" description:"Environment File (default: .env)"`
 	Migrate string `short:"m" long:"migrate" description:"DB mirgrate tool" choice:"up" choice:"down" choice:"status" choice:"version" choice:"reset" choice:"up-by-one" choice:"up-to" choice:"down-to"`
 	PWHash  string `short:"p" long:"password" description:"Password Hash"`
+	UID     bool   `short:"u" long:"uid" description:"UID"`
 }
 
 func migrate(db *gorm.DB, migrateCMD string, migrateArgs []string) (doExit bool) {
@@ -141,6 +144,11 @@ func main() {
 		}
 		log.Printf("Password: %s Hashed: %s", opts.PWHash, hashed)
 
+		return
+	}
+	if opts.UID {
+		uid := ksuid.New().String()
+		log.Printf("UID: %s", uid)
 		return
 	}
 

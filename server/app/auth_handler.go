@@ -7,8 +7,9 @@ import (
 	"blubooks/util/tools"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func (app *App) Login(w http.ResponseWriter, r *http.Request) {
@@ -34,9 +35,10 @@ func (app *App) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := json.NewEncoder(w).Encode(token); err != nil {
+	dtos := token.ToDto(user)
+	if err := json.NewEncoder(w).Encode(dtos); err != nil {
+		log.Warn(err)
 		printError(app, w, http.StatusInternalServerError, appErrJsonCreationFailure, err)
-		return
 	}
 
 }

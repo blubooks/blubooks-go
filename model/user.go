@@ -10,6 +10,7 @@ type User struct {
 	g.ModelUID
 	Email              string
 	Password           string
+	IsAdmin            bool
 	NewPasswordRequest *time.Time
 }
 

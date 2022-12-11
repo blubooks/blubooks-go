@@ -20,6 +20,7 @@ func JWTAuth(a *app.App) func(next http.Handler) http.Handler {
 				return
 			}
 			jwt := service.Jwt{}
+
 			user, err := jwt.ValidateToken(token[1])
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)

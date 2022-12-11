@@ -46,7 +46,6 @@ func (Jwt) ValidateToken(accessToken string) (model.User, error) {
 	if err != nil {
 		return user, err
 	}
-
 	payload, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		user.ID = payload["id"].(string)

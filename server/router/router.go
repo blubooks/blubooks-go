@@ -38,9 +38,9 @@ func New(a *app.App) *chi.Mux {
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.JWTAuth(a))
 				r.Use(middleware.ContentTypeJson)
-				r.Get("/clients/{id}/collections", a.PageGetCollectionsFromClient)
-				r.Get("/clients/{id}", a.PageReadClient)
-				r.Get("/collections/{id}", a.PageGetCollection)
+				r.Get("/client/{id}/collections", a.PageGetCollectionsFromClient)
+				r.Get("/client/{id}", a.PageReadClient)
+				r.Get("/collection/{id}", a.PageGetCollection)
 				//r.Get("/clients/{id}/collections", a.PageGetCollections)
 				//r.Get("/clients/{id}/collections", a.GetCollections)
 
@@ -52,11 +52,11 @@ func New(a *app.App) *chi.Mux {
 		r.Group(func(r chi.Router) {
 			r.Use(middleware.JWTAuth(a))
 			r.Use(middleware.ContentTypeJson)
-			r.Get("/clients/{id}", a.ReadClient)
+			r.Get("/client/{id}", a.ReadClient)
 			//r.Get("/clients/{id}/collections", a.GetCollections)
 			//r.Get("/clients/{id}/collections", a.GetCollections)
 
-			r.Get("/clients", a.ListClients)
+			r.Get("/client", a.ListClients)
 		})
 	})
 	r.Get("/*", a.HandleIndex)

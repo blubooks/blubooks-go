@@ -34,12 +34,29 @@ func New(a *app.App) *chi.Mux {
 			r.Post("/auth/refresh", a.RefreshLoginToken)
 		})
 
+		r.Route("/page", func(r chi.Router) {
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.JWTAuth(a))
+				r.Use(middleware.ContentTypeJson)
+				r.Get("/clients/{id}/collections", a.PageGetCollectionsFromClient)
+				r.Get("/clients/{id}", a.PageReadClient)
+				r.Get("/collections/{id}", a.PageGetCollection)
+				//r.Get("/clients/{id}/collections", a.PageGetCollections)
+				//r.Get("/clients/{id}/collections", a.GetCollections)
+
+				r.Get("/clients", a.PageListClients)
+			})
+
+		})
+
 		r.Group(func(r chi.Router) {
 			r.Use(middleware.JWTAuth(a))
 			r.Use(middleware.ContentTypeJson)
-			r.Get("/clients/{id}/collections", a.GetCollections)
+			r.Get("/clients/{id}", a.ReadClient)
+			//r.Get("/clients/{id}/collections", a.GetCollections)
+			//r.Get("/clients/{id}/collections", a.GetCollections)
 
-			r.Get("/clients", a.HandleListClients)
+			r.Get("/clients", a.ListClients)
 		})
 	})
 	r.Get("/*", a.HandleIndex)

@@ -56,7 +56,7 @@ func (app *App) RefreshLoginToken(w http.ResponseWriter, r *http.Request) {
 	jwt := service.Jwt{}
 	user, err := jwt.ValidateRefreshToken(token)
 	if err != nil {
-		printError(app, w, http.StatusUnauthorized, "invalid token", err)
+		printError(app, w, http.StatusNotAcceptable, "invalid token", err)
 		return
 	}
 

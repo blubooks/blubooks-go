@@ -43,6 +43,10 @@ type Section struct {
 	BookID    string
 	SectionID string
 }
+type SectionForm struct {
+	Title   string `json:"title" form:"required,max=255"`
+	Content string `json:"content"`
+}
 
 type SectionDtos []*SectionDto
 type SectionDto struct {
@@ -81,4 +85,16 @@ func (os Sections) ToDto() SectionDtos {
 		dtos[i] = o.ToDto()
 	}
 	return dtos
+}
+
+func (f *SectionForm) ToModel() (*Section, error) {
+	/*pubDate, err := time.Parse("2006-01-02", f.PublishedDate)
+	if err != nil {
+		return nil, err
+	}
+	*/
+	return &Section{
+		Title:   f.Title,
+		Content: f.Content,
+	}, nil
 }

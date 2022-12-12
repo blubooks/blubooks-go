@@ -53,3 +53,10 @@ func ReadSection(db *gorm.DB, id string) (*model.Section, error) {
 	return section, nil
 
 }
+
+func UpdateSection(db *gorm.DB, section *model.Section) error {
+	if err := db.Model(&section).Updates(section).Where("id = ?", section.ID).Error; err != nil {
+		return err
+	}
+	return nil
+}

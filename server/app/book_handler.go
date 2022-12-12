@@ -3,6 +3,7 @@ package app
 import (
 	"blubooks/model"
 	"blubooks/repository"
+	"blubooks/util/validator"
 	"encoding/json"
 	"net/http"
 
@@ -146,4 +147,53 @@ func (app *App) ReadSection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func (app *App) UpdateSection(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	form := &model.SectionForm{}
+	if err := json.NewDecoder(r.Body).Decode(form); err != nil {
+		log.Warn(err)
+		printError(app, w, http.StatusUnprocessableEntity, appErrFormDecodingFailure, err)
+		return
+	}
+
+	if err := app.validator.Struct(form); err != nil {
+		log.Warn(err)
+
+		resp := validator.ToErrResponse(err, nil)
+		if resp == nil {
+			printError(app, w, http.StatusInternalServerError, appErrFormErrResponseFailure, err)
+			return
+		}
+		respBody, err := json.Marshal(resp)
+		if err != nil {
+			log.Warn(err)
+			printError(app, w, http.StatusInternalServerError, appErrJsonCreationFailure, err)
+			return
+		}
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Write(respBody)
+		return
+	}
+
+	sectionModel, err := form.ToModel()
+	if err != nil {
+		log.Warn(err)
+		printError(app, w, http.StatusUnprocessableEntity, appErrFormDecodingFailure, err)
+		return
+	}
+	sectionModel.ID = id
+	if err := repository.UpdateSection(app.db, sectionModel); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		log.Warn(err)
+		printError(app, w, http.StatusInternalServerError, appErrDataUpdateFailure, err)
+		return
+	}
+	log.Infof("Section updated: %d", id)
+	w.WriteHeader(http.StatusAccepted)
 }

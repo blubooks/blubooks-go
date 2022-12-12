@@ -56,6 +56,7 @@ func New(a *app.App) *chi.Mux {
 			r.Use(middleware.ContentTypeJson)
 			r.Get("/client/{id}", a.ReadClient)
 			r.Get("/section/{id}", a.ReadSection)
+			r.Put("/section/{id}", a.UpdateSection)
 
 			//r.Get("/clients/{id}/collections", a.GetCollections)
 			//r.Get("/clients/{id}/collections", a.GetCollections)

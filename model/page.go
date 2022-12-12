@@ -20,13 +20,13 @@ type PageDto struct {
 	Type    string `json:"type,omitempty"`
 	Back    string `json:"back,omitempty"`
 	Content struct {
-		Clients     []*ClientDto     `json:"clients,omitempty"`
-		Client      *ClientDto       `json:"client,omitempty"`
-		Collections []*CollectionDto `json:"collections,omitempty"`
-		Collection  *CollectionDto   `json:"collection,omitempty"`
-		Books       []*BookDto       `json:"books,omitempty"`
-		Book        *BookDto         `json:"book,omitempty"`
-		Sections    []*SectionDto    `json:"sections,omitempty"`
-		Section     *SectionDto      `json:"section,omitempty"`
+		Clients     []*ClientDto      `json:"clients,omitempty"`
+		Client      *ClientDto        `json:"client,omitempty"`
+		Collections []*CollectionDto  `json:"collections,omitempty"`
+		Collection  *CollectionDto    `json:"collection,omitempty"`
+		Books       []*BookDto        `json:"books,omitempty"`
+		Book        *BookDto          `json:"book,omitempty"`
+		Sections    []*SectionNaviDto `json:"sections,omitempty"`
+		Section     *SectionDto       `json:"section,omitempty"`
 	} `json:"content"`
 }

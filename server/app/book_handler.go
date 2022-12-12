@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/segmentio/ksuid"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -63,16 +64,16 @@ func getSections(app *App, w http.ResponseWriter, r *http.Request) (error, model
 	return nil, list.ToDto()
 }
 
-func getSectionsTitles(app *App, w http.ResponseWriter, r *http.Request, bookID string) (model.Sections, error) {
+func getSectionsTitles(app *App, w http.ResponseWriter, r *http.Request, bookID string) (model.SectionNavis, error) {
 
-	list, err := repository.ListSectionsTitles(app.db, bookID)
+	list, err := repository.ListSectionsTitlesRec(app.db, bookID)
 	if err != nil {
 		log.Warn(err)
 		printError(app, w, http.StatusInternalServerError, appErrDataAccessFailure, err)
 		return nil, err
 	}
 	if list == nil {
-		var list model.Sections
+		var list model.SectionNavis
 		return list, nil
 	}
 	return list, err
@@ -94,7 +95,7 @@ func (app *App) PageReadBook(w http.ResponseWriter, r *http.Request) {
 
 	var page model.PageDto
 	page.Content.Book = book.ToDto()
-	page.Content.Sections = sections.ToDto()
+	page.Content.Sections = sections.ToSectionNaviDto()
 
 	if err := json.NewEncoder(w).Encode(page); err != nil {
 		log.Warn(err)
@@ -124,7 +125,7 @@ func (app *App) PageReadSection(w http.ResponseWriter, r *http.Request) {
 	var page model.PageDto
 	page.Content.Book = book.ToDto()
 	page.Content.Section = section.ToMarkdownDto()
-	page.Content.Sections = sections.ToDto()
+	page.Content.Sections = sections.ToSectionNaviDto()
 
 	if err := json.NewEncoder(w).Encode(page); err != nil {
 		log.Warn(err)
@@ -147,6 +148,69 @@ func (app *App) ReadSection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func (app *App) CreateSection(w http.ResponseWriter, r *http.Request) {
+	form := &model.SectionForm{}
+	if err := json.NewDecoder(r.Body).Decode(form); err != nil {
+		log.Warn(err)
+		printError(app, w, http.StatusUnprocessableEntity, appErrFormDecodingFailure, err)
+		return
+	}
+
+	if err := app.validator.Struct(form); err != nil {
+		log.Warn(err)
+
+		resp := validator.ToErrResponse(err, nil)
+		if resp == nil {
+			printError(app, w, http.StatusInternalServerError, appErrFormErrResponseFailure, err)
+			return
+		}
+		respBody, err := json.Marshal(resp)
+		if err != nil {
+			log.Warn(err)
+			printError(app, w, http.StatusInternalServerError, appErrJsonCreationFailure, err)
+			return
+		}
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Write(respBody)
+		return
+	}
+
+	sectionModel, err := form.ToModel()
+	if err != nil {
+		log.Warn(err)
+		printError(app, w, http.StatusUnprocessableEntity, appErrFormDecodingFailure, err)
+		return
+	}
+
+	id := chi.URLParam(r, "id")
+
+	book, _ := repository.ReadBook(app.db, id)
+	if book != nil {
+		sectionModel.BookID = book.ID
+	} else {
+		subSection, err := repository.ReadSection(app.db, id)
+		if err != nil {
+			printError(app, w, http.StatusInternalServerError, appErrDataAccessFailure, err)
+			return
+		}
+
+		sectionModel.SectionID = subSection.ID
+		sectionModel.BookID = subSection.BookID
+	}
+
+	sectionModel.ID = ksuid.New().String()
+
+	section, err := repository.CreateSection(app.db, sectionModel)
+	if err != nil {
+
+		log.Warn(err)
+		printError(app, w, http.StatusInternalServerError, appErrDataUpdateFailure, err)
+		return
+	}
+	log.Infof("New book created: %d", section.ID)
+	w.WriteHeader(http.StatusCreated)
 }
 
 func (app *App) UpdateSection(w http.ResponseWriter, r *http.Request) {

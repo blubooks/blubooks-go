@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS sections
 
 INSERT INTO sections (id,sort,book_id,title,content,created_at) VALUES("2IoAJVJ7FNQaJHzX6pM2fWdzeLD", 1 ,"2I9XSLmWimWTepVU078Poe1Qx6w","Page1","# Text Inhalt\nText Test", NOW());
 INSERT INTO sections (id,sort,book_id,title,content,created_at) VALUES("2IoDZHAfrLL7sfk1WR1pCXQNJX8", 2, "2I9XSLmWimWTepVU078Poe1Qx6w","Page 2","Text Inhalt 2", NOW());
+INSERT INTO sections (id,section_id,sort,book_id,title,content,created_at) VALUES("2IoxbR1gZRLXo1NHxJYdQfIXpDm","2IoDZHAfrLL7sfk1WR1pCXQNJX8", 1, "2I9XSLmWimWTepVU078Poe1Qx6w","Page 2 2","Text Inhalt 2 2", NOW());
 COMMIT;
 
 -- +goose Down

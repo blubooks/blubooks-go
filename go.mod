@@ -26,6 +26,7 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/segmentio/ksuid v1.0.4 // indirect
+	github.com/yuin/goldmark v1.5.3 // indirect
 	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 )

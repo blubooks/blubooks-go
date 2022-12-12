@@ -1,14 +1,17 @@
 package model
 
+/*
 const (
+
 	TYPE_Clients     string = "clients"
 	TYPE_Client             = "client"
 	TYPE_Collections        = "collections"
 	TYPE_Collection         = "collection"
 	TYPE_Books              = "books"
 	TYPE_Book               = "book"
-)
 
+)
+*/
 type PageBackLink struct {
 	Type string `json:"type,omitempty"`
 }
@@ -23,5 +26,7 @@ type PageDto struct {
 		Collection  *CollectionDto   `json:"collection,omitempty"`
 		Books       []*BookDto       `json:"books,omitempty"`
 		Book        *BookDto         `json:"book,omitempty"`
+		Sections    []*SectionDto    `json:"sections,omitempty"`
+		Section     *SectionDto      `json:"section,omitempty"`
 	} `json:"content"`
 }

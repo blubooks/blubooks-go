@@ -51,6 +51,15 @@ github.com/segmentio/ksuid
 # github.com/sirupsen/logrus v1.9.0
 ## explicit; go 1.13
 github.com/sirupsen/logrus
+# github.com/yuin/goldmark v1.5.3
+## explicit; go 1.18
+github.com/yuin/goldmark
+github.com/yuin/goldmark/ast
+github.com/yuin/goldmark/parser
+github.com/yuin/goldmark/renderer
+github.com/yuin/goldmark/renderer/html
+github.com/yuin/goldmark/text
+github.com/yuin/goldmark/util
 # golang.org/x/crypto v0.3.0
 ## explicit; go 1.17
 golang.org/x/crypto/bcrypt

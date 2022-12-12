@@ -33,14 +33,32 @@ func ListSections(db *gorm.DB, id string) (model.Sections, error) {
 		return nil, err
 	}
 	return sections, nil
+
 }
 func ListSectionsTitles(db *gorm.DB, id string) (model.Sections, error) {
 
+	/*
 	sections := make([]*model.Section, 0)
 	if err := db.Select("id,title").Where("book_id = ?", id).Order("sort asc, id desc").Find(&sections).Error; err != nil {
 		return nil, err
 	}
 	return sections, nil
+	*/
+	sections := make([]*model.Section, 0)
+	db.Raw("SELECT SUM(age) FROM users WHERE role = ?"
+	WITH RECURSIVE cte_connect_by AS (
+		SELECT 1 AS level, CAST(CONCAT('/', name) AS VARCHAR(4000)) AS connect_by_path, s.* 
+		  FROM employees s WHERE id = 1
+		UNION ALL
+		SELECT level + 1 AS level, CONCAT(connect_by_path, '/', s.name) AS connect_by_path, s.* 
+		  FROM cte_connect_by r INNER JOIN employees s ON  r.id = s.mng_id
+	 )
+	 SELECT id, name, mng_id, level, connect_by_path path
+	 FROM cte_connect_by
+	 ORDER BY id;
+	 , "admin").Scan(&age)
+
+	 return section nil
 }
 
 func ReadSection(db *gorm.DB, id string) (*model.Section, error) {

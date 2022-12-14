@@ -7,6 +7,7 @@
       <div  v-else>
         <div >
           <h3>Mandant: {{ store.client.title }}</h3>  
+
           <div v-for="item in store.collections">
             <router-link :to="{ name: 'collection', params: { id: item.id }}">{{ item.title }}</router-link> 
           </div>                

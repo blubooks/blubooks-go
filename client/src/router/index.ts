@@ -14,7 +14,7 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('@/views/BookView.vue')
+      component: () => import('@/views/SectionView.vue')
     },    
     {
       path: '/section/:id',
@@ -22,7 +22,7 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('@//views/SectionView.vue')
+      component: () => import('../views/SectionView.vue')
     },    
     {
       path: '/collection/:id',

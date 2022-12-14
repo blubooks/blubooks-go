@@ -7,33 +7,33 @@
           <router-link to="/" class="navbar-brand">home</router-link>
           <div class="navbar-nav mr-auto">
             <li class="nav-item">
-              <router-link v-if="currentUser" to="/user" class="nav-link"
-                >User</router-link
+              <a v-if="currentUser" to="/user" class="nav-link"
+                >User</a
               >
             </li>
           </div>
           <div v-if="!currentUser" class="navbar-nav ml-auto">
             <li class="nav-item">
-              <router-link to="/register" class="nav-link">
-                <font-awesome-icon icon="user-plus" /> Sign Up
-              </router-link>
+              <a to="/register" class="nav-link">
+               Sign Up
+              </a>
             </li>
             <li class="nav-item">
               <router-link to="/login" class="nav-link">
-                <font-awesome-icon icon="sign-in-alt" /> Login
+               Login
               </router-link>
             </li>
           </div>
           <div v-if="currentUser" class="navbar-nav ml-auto">
             <li class="nav-item">
-              <router-link to="/profile" class="nav-link">
-                <font-awesome-icon icon="user" />
+              <a to="/profile" class="nav-link">
+              
                 {{ currentUser.email }}
-              </router-link>
+              </a>
             </li>
             <li class="nav-item">
               <button class="btn btn-link nav-link" @click.prevent="logOut">
-                <font-awesome-icon icon="sign-out-alt" /> LogOut
+                LogOut
               </button>
             </li>
           </div>

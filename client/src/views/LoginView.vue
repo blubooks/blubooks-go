@@ -41,7 +41,7 @@
 <script lang="ts" setup>
 import { ref} from 'vue'
 import { Form, Field, ErrorMessage } from "vee-validate";
-import type { Error } from "@/models/app.model";
+import type { AppError } from "@/models/app.model";
 import  { genResponseError } from "@/utils/errorMessage";
 
 import type { UserLoginForm } from "@/models/user.model";
@@ -50,7 +50,7 @@ import * as yup from "yup";
 import router from "@/router";
 
 const store = useAuthStore()
-const error = ref<Error>(null)
+const error = ref<AppError>(null)
 
 const loading = ref(false)
 const schema = yup.object({

@@ -1,3 +1,4 @@
+
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 
@@ -11,6 +12,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/main.css";
 
 setupInterceptors();
+
+
 
 const app = createApp(App);
 

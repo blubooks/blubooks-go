@@ -1,5 +1,10 @@
 
 
+# starts
+
+  docker-compose up -d db adminer 
+  docker-compose up app
+
 # migrateion tool
 
 copy .env, change db_Host to localhost

@@ -46,7 +46,7 @@ services:
     restart: always
     networks:
       - blubooks_dev
-  adminer_dev:
+  adminer:
     container_name: blubooks_adminer
     image: adminer:4.8.1
     restart: always

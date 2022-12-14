@@ -29,8 +29,8 @@
         </div>
 
         <div class="form-group">
-          <div v-if="message" class="alert alert-danger" role="alert">
-            {{ message }}
+          <div v-if="error && error!.message" class="alert alert-danger" role="alert">
+            {{ error!.message }}
           </div>
         </div>
       </Form>
@@ -41,43 +41,48 @@
 <script lang="ts" setup>
 import { ref} from 'vue'
 import { Form, Field, ErrorMessage } from "vee-validate";
+import type { Error } from "@/models/app.model";
+import  { genResponseError } from "@/utils/errorMessage";
+
 import type { UserLoginForm } from "@/models/user.model";
 import { useAuthStore } from "@/stores/auth";
 import * as yup from "yup";
 import router from "@/router";
 
 const store = useAuthStore()
-const message = ref("")
+const error = ref<Error>(null)
+
 const loading = ref(false)
 const schema = yup.object({
   email: yup.string().required("email is required!").email("Email is invalid!"),
   password: yup.string().required(),
 });
 
-
 if (store.loggedIn) {
-    router.push("/clients");
+    router.push("/clients")
 }
 
-function handleLogin(values: any) {
+function handleLogin(values: any, actions: any) {
   const user =  <UserLoginForm>values
-  const store = useAuthStore();
-  loading.value = true;
-  store.login(user).then(
-    () => {
+  const store = useAuthStore()
+  loading.value = true
+  store.login(user).then( 
+    () => { 
+      loading.value = false
       router.push("/");
     },
-    (error) => {
-      loading.value = false;
-      message.value =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+    (err: any) => { 
+      loading.value = false
+      error.value = genResponseError(err);
+      if (error.value?.fields) {
+        for (let field in error.value?.fields) {
+          actions.setFieldError(field, error.value?.fields[field]);
+        }
+      }
     }
-  );
+  ) 
 }
+
 </script>
 
 <style scoped>

@@ -6,7 +6,7 @@ import TokenService from "../services/token.service";
 const user = TokenService.getUser();
 const initialState = user
   ? { loggedIn: true, user }
-  : { loggedIn: false , user: null };
+  : { loggedIn: false, user: null };
 
 export const useAuthStore = defineStore("auth", {
   state: () => {
@@ -35,12 +35,12 @@ export const useAuthStore = defineStore("auth", {
       this.user = null;
     },
     refreshToken(accessToken: string) {
-      if (this.user == null){
+      if (this.user == null) {
         return;
       }
       this.loggedIn = true;
       this.user = { ...this.user, accessToken: accessToken };
-    }    
+    },
   },
 });
 

@@ -4,8 +4,7 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 import { PromiseDialog } from "vue3-promise-dialog";
-import setupInterceptors from './services/setupInterceptors';
-
+import setupInterceptors from "./services/setupInterceptors";
 
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";

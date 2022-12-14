@@ -4,15 +4,14 @@ import type { UserLoginForm } from "@/models/user.model";
 
 class AuthService {
   login(user: UserLoginForm) {
-    return api
-      .post("/auth/login", user)
-      .then((response) => {
-        if (response.data.accessToken) {
-          TokenService.setUser(response.data);
-        }
+    //console.log(user)
+    return api.post("/auth/login", user).then((response) => {
+      if (response.data.accessToken) {
+        TokenService.setUser(response.data);
+      }
 
-        return response.data;
-      });
+      return response.data;
+    });
   }
 
   logout() {
